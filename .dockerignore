@@ -1,0 +1,54 @@
+__pycache__/
+*.pyc
+.git
+
+
+
+docker run -d --name Jenkins --restart unless-stopped -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -e TZ=Asia/Kolkata jenkins/jenkins:lts
+
+docker run -d --name Jenkins  --restart unless-stopped -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v //var/run/docker.sock:/var/run/docker.sock -e TZ=Asia/Kolkata jenkins/jenkins:lts
+
+
+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
+
+docker login -u sawan838
+
+dckr_pat_PTAv789rA2tkmFe7iOLB5puuNSE
+
+
+#1. Docker login 
+
+echo "Logging to the Docker Hub "
+echo "$DOCKER_PWD" | docker login --username "$DOCKER_USER" --password-stdin
+echo "Successfull login with Docker "
+
+#2 Image naming
+IMAGE="sawan838/student-api-flask"
+TAG="${BUILD_NUMBER}"
+
+#3 Build and push 
+echo "Building image..."
+docker build -t "$IMAGE:$TAG" -t "$IMAGE:latest" .
+
+echo "Pusing the  image..."
+docker push "$IMAGE:$TAG"
+docker push "$IMAGE:latest"
+
+
+#4 Deploy on the Docker host
+echo "Deploying"
+docker pull "$IMAGE:$TAG"
+docker rm -f student-api-flask || true
+docker run -d --name student-api-flask -p 5000:5000 "$IMAGE:$TAG"
+
+#5 Quick smoke check
+
+sleep 2
+echo "Hit http://localhost:5000 to see the app"
+curl http://localhost:5000 
+
+
+
+
+
+
