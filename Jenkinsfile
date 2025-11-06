@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    triggers {
+    trigge {
         // Execute pipeline every 7 days
          cron('H H */7 * *')
          
